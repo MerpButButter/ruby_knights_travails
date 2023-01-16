@@ -5,7 +5,11 @@ class Board
   def initialize(knight)
     @board = Array.new(8) { Array.new(8, "   ") }
     @knight = knight
-    place_piece([4, 4])
+
+    knight_column = knight.position[0] -1
+    knight_row = knight.position[1] -1
+    @board[knight_column][knight_row] = " #{knight.icon} "
+
     display
   end
 
@@ -27,11 +31,21 @@ class Board
   end
 
   def place_piece(position)
-    @board[@knight.position[0] - 1][@knight.position[1] - 1] = "   "
-    column = position[0] - 1
-    row = position[1] - 1
-    @knight.position = position
+    position = Knight::MOVES[position]
+    return self if position.nil? and !warn("Position #{position} isn't valid.")
 
+    knight_column = @knight.position[0] 
+    knight_row = @knight.position[1]
+
+    column = (knight_column + position[0]) - 1
+    row = (knight_row + position[1]) - 1
+    
+    return self if column.negative? || row.negative?
+
+    @board[knight_column - 1][knight_row - 1] = "   "
+    @knight.position = [column + 1, row + 1]
+    
+    
     @board[column][row] = " #{@knight.icon} "
     self
   end
@@ -45,13 +59,13 @@ end
 speed = 0.5
 board = Board.new(Knight.new([4, 4]))
 sleep(speed)
-board.place_piece([5, 4]).display
+board.place_piece(:dl).display
 sleep(speed)
-board.place_piece([4, 8]).display
+board.place_piece(:ld).display
 sleep(speed)
-board.place_piece([2, 8]).display
+board.place_piece(:ru).display
 sleep(speed)
-board.place_piece([1, 8]).display
+board.place_piece(:lu).display
 sleep(speed)
-board.place_piece([2, 6]).display
+board.place_piece(:se).display
 sleep(speed)
