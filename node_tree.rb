@@ -53,7 +53,8 @@ class Tree
       short_path << shortest_path_node.data 
       shortest_path_node = shortest_path_node.parent
     end
-    short_path
+    short_path.reverse!.shift
+    short_path 
   end
 
 end
