@@ -9,7 +9,7 @@ class Knight
   public_constant :MOVES
 
   def initialize(position)
-    @icon = "♞"
+    @icon = "♞".color("orange")
     @position = position
   end
 end
