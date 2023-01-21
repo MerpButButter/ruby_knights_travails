@@ -17,44 +17,55 @@ class Tree
   end
 
   def level_order
-    queue = [@root]
-    queue.push(*yield(queue.shift)).compact! until queue.empty?
+    @queue.push(*yield(@queue.shift)).compact! until @queue.empty?
   end
 
   def shortest_path(goal, moves, method)
-    shortest_path_node = nil
-    made_moves = []
-    level_order do |node|
-      break if shortest_path_node
+    shortest_path_length = 1000
+    made_moves = [@root.data]
+    shortest_paths = []
+    queue = [@root]
 
+    until queue.empty? 
+      node = queue.shift
+      next if shortest_path_length < move_length(node) 
+      
       if node.data == goal
-        shortest_path_node = node
-        break
+        shortest_path_length = move_length(node) if shortest_path_length > move_length(node)
+        shortest_paths.push(node)
+        next
       else
         moves.values.map do |move| 
           move = method.call(move, node.data)
           next if move.nil?
-          next if made_moves.include?(move.map { |n| n + 1 })
+          
+          p(queue.map {|q_node| q_node.data})
+          move.map! { |n| n + 1 }
+          next if made_moves.include?(move)
 
-          made_moves.push(move.map { |n| n + 1 })
+          made_moves.push(move)
 
-          node = Node.new(move.map { |n| n + 1 }, node) 
+          node = Node.new(move, node) 
           if node.data == goal
-            shortest_path_node = node
-            break  
+            shortest_path_length = move_length(node) if shortest_path_length > move_length(node)
+            shortest_paths.push(node)
+            next  
           else
-            node
+            queue.push(node)
           end    
         end
       end
     end
-    short_path = []
-    until shortest_path_node.nil?
-      short_path << shortest_path_node.data 
-      shortest_path_node = shortest_path_node.parent
+    p shortest_paths
+  end
+
+  def move_length(node)
+    length = 0
+    until node.nil?
+      length += 1
+      node = node.parent
     end
-    short_path.reverse!.shift
-    short_path 
+    length
   end
 
 end

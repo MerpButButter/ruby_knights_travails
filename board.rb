@@ -51,7 +51,7 @@ class Board
     column = (knight_column + position[0]) - 1
     row = (knight_row + position[1]) - 1
     
-    return if column.negative? || row.negative?
+    return unless column.between?(0, 7) && row.between?(0, 7)
 
     [column, row]    
   end

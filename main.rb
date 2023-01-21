@@ -15,4 +15,4 @@ def knights_travails(start, goal)
   puts("It took #{shortest_path.length} moves.".color("orange"))
 end
 
-knights_travails([rand(1..8), rand(1..8)], [rand(1..8), rand(1..8)])
+knights_travails([4, 4], [6, 4])
